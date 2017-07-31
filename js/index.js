@@ -257,59 +257,60 @@ $(document).ready(function() {
 
     // check if planet already has obstacles
     if (textCol.includes("*")) {
-    	$(".error").html("planet already has obstacles. They're invisible for now.");
+      $(".error").html("planet already has obstacles. They're invisible for now.");
     } else {
 
-    	var difficulty = $(".setObst").val();
-    	difficulty = Number(difficulty);
-    	var max_diff = Math.ceil(planet_size / 4);
+      var difficulty = $(".setObst").val();
+      difficulty = Number(difficulty);
+      var max_diff = Math.ceil(planet_size / 4);
 
-        // ensure proper usage
-    		if (!difficulty) {
+      // ensure proper usage
+      if (!difficulty) {
 
-    		    $(".error").html("must provide difficulty");
+        $(".error").html("must provide difficulty");
 
-    		} else if (difficulty > max_diff) {
+      } else if (difficulty > max_diff) {
 
-    		    $(".error").html("difficulty too high for planet size");
+        $(".error").html("difficulty too high for planet size");
 
-    		} else if (difficulty < 1) {
+      } else if (difficulty < 1) {
 
-            $(".error").html("difficulty can't be less than 1");
+        $(".error").html("difficulty can't be less than 1");
 
-        } else {
+      } else {
 
-    			$(".error").html("");
+        $(".error").html("");
 
-          // let user know how many rovers can be created
-          var new_rover = '<button class="btn btn-primary">new rover</button><p>You can make up to 3 rovers</p>';
-    			//var new_rover = '<input type="submit" value="new rover" class="makeRover"><p>You can make up to 3 rovers</p>'
-    			$(".newR").html(new_rover);
+        // let user know how many rovers can be created
+        var new_rover = '<button class="btn btn-primary">new rover</button><p>\
+          You can make up to 3 rovers</p>';
+        //var new_rover = '<input type="submit" value="new rover" class="makeRover"><p>You can make up to 3 rovers</p>'
+        $(".newR").html(new_rover);
 
-          // set obstacles according to difficulty
-    			set_obstacles(difficulty);
+        // set obstacles according to difficulty
+        set_obstacles(difficulty);
 
-    			// function to set obst
-    			function set_obstacles(difficulty) {
-            console.log("here!");
-            // repeate difficulty times
-    			  for(var i = 0; i < difficulty; i++) {
+        // function to set obst
+        function set_obstacles(difficulty) {
+        
+          // repeate difficulty times
+          for(var i = 0; i < difficulty; i++) {
 
-      		    // j is row
-      			  for(var j = 0; j < planet_size; j++) {
-      		      // k is random col
-      				  var k = Math.floor(Math.random() * planet_size);
-      			 	  var v3 = $(".c"+j+k).text();
-      				  // make obstacles white so they are hidden
-      				  $(".c"+j+k).css("color","white");
-                // "*" will be the obstacles
-      				  $(".c"+j+k).text("*");
-              }
-  					}
-  				}
-    		}
-    	}
-    });
+            // j is row
+            for(var j = 0; j < planet_size; j++) {
+              // k is random col
+              var k = Math.floor(Math.random() * planet_size);
+              var v3 = $(".c"+j+k).text();
+              // make obstacles white so they are hidden
+              $(".c"+j+k).css("color","white");
+              // "*" will be the obstacles
+              $(".c"+j+k).text("*");
+            }
+          }
+        }
+      }
+    }
+});
 
 
 /***********************************
@@ -420,7 +421,7 @@ clear();
 });
 
 // clear rows
-[function clear() {
+function clear() {
 
 planet_size = 0;
 finalMessages = [];
