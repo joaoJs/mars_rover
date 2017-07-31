@@ -1,18 +1,13 @@
 .col- {
     
     font-weight: bold;
-    /*background: yellow;*/
     height: 50px;
     width: 50px;
     float: left;
     padding: 15px;
     border: 1px solid red;
 }
-/*
-.c10 {
-  background-color: black;
-}
-*/
+
 .error {
   color: red;
 }
@@ -25,5 +20,13 @@
 
 .row {
  
+}
+
+#green {
+  color: green;
+}
+
+#red {
+  color: red;
 }
 

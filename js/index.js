@@ -1,39 +1,48 @@
-
 $(document).ready(function() {
   
-  // sub for planet.space.length
   var planet_size = 0;
 
-  function Rover(position, direction, commands) {
-  this.position = position;
-  this.direction = direction;
-  this.commands = commands;
-}
+  ///////////////////////////////////////////////
+  // Rover constructor 
+  function Rover(name, position, direction, commands) {
+    this.name = name;
+    this.position = position;
+    this.direction = direction;
+    this.commands = commands;
+    this.final = "";
+  }
   
+  // rovers will be stored in rovers object
   var rovers = {};
+
+  // final messages will be stored in array
+  var finalMessages = [];
   
   // variable to control creation of rovers
   var control = 0;
-  
- function goForward(rover) {
+ 
+  /*********************************************************
+    function that will move rover according to its direction 
+   *********************************************************/
+
+  function goForward(rover) {
     
-    //console.log(x,y, "goForward!")
     console.log(rover, "F");
 
-  switch(rover.direction) {
-    case 'N':
-      rover.position[1]++;
-      break;
-    case 'E':
-      rover.position[0]++;
-      break;
-    case 'S':
-      rover.position[1]--;
-      break;
-    case 'W':
-      rover.position[0]--;
-      break;
-  }
+    switch(rover.direction) {
+      case 'N':
+        rover.position[1]++;
+        break;
+      case 'E':
+        rover.position[0]++;
+        break;
+      case 'S':
+        rover.position[1]--;
+        break;
+      case 'W':
+        rover.position[0]--;
+        break;
+      }
 
   //the rover needs to wrap from one edge of the grid to another
   if(rover.position[0] === planet_size) rover.position[0] = 0;
@@ -41,24 +50,23 @@ $(document).ready(function() {
   if(rover.position[1] === planet_size) rover.position[1] = 0;
   if(rover.position[1] < 0) rover.position[1] = planet_size - 1;
 
-  //if rover finds an obstacle it shoud stop executing the commands, stop at the las
-  //possible position and report that it found an obsacle.
-  // lets check html value
-  // '.col-pos[0]+pos[1]'
   var x =  rover.position[0];
   var y =  rover.position[1];
   var text = $(".c"+y+x).text(); 
-    
+
+  // '.c-y+x' --> html class for grid's new position
+  // if rover finds an obstacle
   if(text === '*') {
+    // change appearance of current position on grid and return result to move function
     $(".c"+y+x).css('border','1px solid black');
     $(".c"+y+x).text("X"); 
     return "found";
+    // if rover crashes with previous rover
   } else if (text === "|" || text === "--") {
     return "crashed"; 
     } else {
       
-    //rovers leave a mark
-      //$(".c"+previous[1]+previous[0]).text("o");
+    //rovers leave a mark (o) on previous position
       switch(rover.direction) {
     case 'N':
       $(".c"+(y-1)+x).text("o");
@@ -78,28 +86,28 @@ $(document).ready(function() {
       break;
   }
      
+  //console.log("New Rover Position: [" + x + ", " + y + "]");
 
-  
-  console.log("New Rover Position: [" + x + ", " + y + "]");
   }
 
 }
   
-/****************************
+/***********************************
   function to move rovers
-****************************/
+ ***********************************/
 
   Rover.prototype.move = function() {
     
-    var final = "alive";
+    var final = "survived";
     var begin = String(this.position[1]+this.position[0]);
     var curr = $(".c"+this.position[1]+this.position[0]).text();
+    var rover = this;
+    var commands = this.commands;
+    //var name = this.name;
+    //var final = this.final;
 
     // check if current position is not an obstacle
     if (curr !== "*") {
- 
-      var rover = this;
-      var commands = this.commands;
   
       // obj to helps rover switch direction
       var changeDirection = {
@@ -119,13 +127,13 @@ $(document).ready(function() {
         // keep result of next move 
         var next = goForward(rover)
     
-
+        // if rover finds obstacle
         if (next === "found") {
-          final = "found";
+          final = " found obstacle";
           $(".col-").css('background','red');
           break;
         } else if (next === "crashed") {
-          final = "crashed";
+          final = " crashed";
           $(".col-").css('background','red');
           break;
         }
@@ -134,21 +142,50 @@ $(document).ready(function() {
       }   
     } else {
 
-      // 
+      //  change appearance of position in grid
       $(".c"+this.position[1]+this.position[0]).css("border","solid 1px black"); 
       $(".c"+this.position[1]+this.position[0]).text("X");
       $(".col-").css('background','red');
-      final = "landed in obstacle";
+      final = " landed in obstacle";
     }
-  
-    //$(".c"+begin).html("Y")
-    $(".final").html(final);
+    
+    rover.final = rover.name + final;
+    finalMessages.push(rover.final);
     
 }
+
+
+/********************************
+    render final messages
+ ********************************/
+
+  function renderFinalMessages(messages) {
+
+    var ul = "<ul>"
+
+    finalMessages.forEach(message => {
+
+      if (/survived/.test(message)) {
+
+        ul += "<li id='green'>"+message+"</li>";
+
+      } else {
+
+        ul += "<li id='red'>"+message+"</li>";
+
+      }
+
+    });
+
+    ul += "</ul>";
+
+    $(".final").append(ul);
+
+  } 
   
-/***************************
+/************************************
     build planet space
-***************************/
+ ************************************/
 
   $(".build").on("click", function() {
     
@@ -181,6 +218,7 @@ $(document).ready(function() {
     
   });
   
+  /////////////////////////////////////////////
   // function to build and append space to html 
   var setSpace = function(height, width) {
   
@@ -200,9 +238,9 @@ $(document).ready(function() {
     }
   };
   
-/************************
-	set obstacles
-************************/  
+/***********************************
+	 set obstacles
+ ***********************************/  
 
   $(".diff").on("click", function() {
     
@@ -227,7 +265,7 @@ $(document).ready(function() {
     
     			$(".error").html("")
       
-    			var new_rover = '<input type="submit" value="new rover" class="makeRover">'
+    			var new_rover = '<input type="submit" value="new rover" class="makeRover"><p>You can make up to 3 rovers</p>'
     			$(".newR").html(new_rover);
       
     			set_obstacles(difficulty);
@@ -251,13 +289,12 @@ $(document).ready(function() {
   				}
     		}
     	}
-    
     });
 
 
-/************************
-	Making new rovers
-************************/  
+/***********************************
+	 Making new rovers
+ ***********************************/  
   
   $(".newR").on("click", function() {
     
@@ -290,11 +327,9 @@ $(document).ready(function() {
     			var x = Number($(".roverX").val());
     			var y = Number($(".roverY").val());
     			var position = [x,y];
-    			var dir = $(".dir").val().toUpperCase(); // toUpperCase()
-          console.log(dir);
+    			var dir = $(".dir").val().toUpperCase(); 
     			var commands = $(".commands").val();
-    			//var maxPos = planet_size - 1;
-    
+    			
     			// ensure user provides necessary info
     			if (!name || x === "" || y === "" || !position || !dir || !commands) {
     			    $(".error").html("must provide all info")
@@ -310,10 +345,12 @@ $(document).ready(function() {
     				} else if (/[^fbrlFBRL]/.test(commands)) {
     					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
     				} else {
-    
+              
+              $(".error").html("");
     					control = 0;
-    					rovers[name] = new Rover(position,dir,commands);
-    
+    					rovers[name] = new Rover(name,position,dir,commands);
+              console.log(rovers[name]);
+
     					// add button to move rovers
     					var start = "<button class='btn btn-primary start'>Start!</button>"
     					$(".action").html(start);  
@@ -324,21 +361,22 @@ $(document).ready(function() {
     						for (let name in rovers) {
     						    rovers[name].move();
     						}
-      
-  						})
-      
+
+                // after each rover has moved, render final results for each rover
+                renderFinalMessages(finalMessages);
+
+  						});
  		   			}
     			}  
-    		})
-      
- 		}    
-	});
+     	  });    
+ 		  }    
+	  });
   
   
   
-/*************************
-	clear past events
-*************************/ 
+/************************************
+	 clear past events and reset
+ ************************************/ 
 
 	$(".clear").on("click", function() {
     	$(".spaceSize").val("");
@@ -351,7 +389,7 @@ $(document).ready(function() {
   	function clear() {
     
     	planet_size = 0;
-    	
+    	finalMessages = [];
     	rovers = {};
     	planet_size = 0;
     	$(".newR").html("");
@@ -363,6 +401,4 @@ $(document).ready(function() {
     	$(".action").html("")  
   	}  
 
-  
-  
 });
