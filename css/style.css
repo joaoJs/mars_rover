@@ -28,7 +28,8 @@ body {
 .final {
   
   font-size: 30px;
-  
+  background: rgba(255,255,255,.6);
+
 }
 
 .row {

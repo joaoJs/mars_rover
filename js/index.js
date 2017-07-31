@@ -97,7 +97,7 @@ $(document).ready(function() {
 
   Rover.prototype.move = function() {
 
-    var final = "survived";
+    var final = " survived";
     var begin = String(this.position[1]+this.position[0]);
     var curr = $(".c"+this.position[1]+this.position[0]).text();
     var rover = this;
@@ -128,11 +128,11 @@ $(document).ready(function() {
 
         // if rover finds obstacle
         if (next === "found") {
-          final = " found obstacle";
+          final = " found obstacle at position ["+ this.position[0] + "," + this.position[1] + "]";
           $(".col-").css('background','red');
           break;
         } else if (next === "crashed") {
-          final = " crashed";
+          final = " crashed at position ["+ this.position[0] + "," + this.position[1] + "]";
           $(".col-").css('background','red');
           break;
         }
@@ -146,6 +146,11 @@ $(document).ready(function() {
       $(".c"+this.position[1]+this.position[0]).text("X");
       $(".col-").css('background','red');
       final = " landed in obstacle";
+    }
+
+    if (final === " survived") {
+      console.log(this);
+      final += "and its current position is ["+ this.position[0] + "," + this.position[1] + "]";
     }
 
     rover.final = rover.name + final;
@@ -279,8 +284,8 @@ $(document).ready(function() {
     			set_obstacles(difficulty);
 
     			// function to set obst
-    			var set_obstacles = function(difficulty) {
-
+    			function set_obstacles(difficulty) {
+            console.log("here!");
             // repeate difficulty times
     			  for(var i = 0; i < difficulty; i++) {
 
