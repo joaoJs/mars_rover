@@ -143,22 +143,38 @@ $(document).ready(function() {
   // build planet space;
   $(".build").on("click", function() {
     
-    var not_empty = $(".row").text();
+    //var not_empty = $(".planet").text();
     
-    if (not_empty) {
+    /*if (not_empty) {
       clear();
-    }
+    }*/
+    
+    clear();
     
     var size = $(".spaceSize").val();
     size = Number(size);
     planet_size = size;
     var space_size = [size, size];
+    var max_diff = Math.ceil(size / 4);
     
+    if (!size || (size < 5) || (size > 15)) {
+      $(".error").html("must provide size from 5 to 15")
+    } else {
+    
+    $(".error").html("");
+      
+    var toDiff_input = "<input placeholder='difficulty 1 -"+max_diff+"' type='number' class='setObst'>"
+    var toDiff = "<input type='submit' value='set obstacles' class='set_obst'><br>"
+    
+    $(".diff_input").append(toDiff_input)
+    $(".diff").append(toDiff); 
+      
     var height = space_size[0];
     var width = space_size[1];
     
     setSpace(height, width);
     
+    }
     
   });
   
@@ -181,11 +197,31 @@ $(document).ready(function() {
 };
   
   //set obstacles
-  $(".set_obst").on("click", function() {
+  $(".diff").on("click", function() {
+    
+    var te = $(".col-").text();
+    
+    if (te.includes("*")) {
+      console.log(te);
+      $(".error").html("planet already has obstacles. They're invisible for now.")
+    } else {
     
     var difficulty = $(".setObst").val();
     difficulty = Number(difficulty);
+    var max_diff = Math.ceil(planet_size / 4);
+    console.log(difficulty, "diff");
     
+    if (!difficulty) {
+      $(".error").html("must provide difficulty")
+    } else if (difficulty > max_diff) {
+      $(".error").html("difficulty too high for planet size")
+    } else {
+    
+    $(".error").html("")
+      
+    var new_rover = '<input type="submit" value="new rover" class="makeRover">'
+    $(".newR").html(new_rover);
+      
     set_obstacles(difficulty);
     
     // function to set obst
@@ -206,71 +242,89 @@ $(document).ready(function() {
     }
   }
   }
+    }
+    }
     
   });
   
   // open rover's info
-  $(".makeRover").on("click", function() {
+  $(".newR").on("click", function() {
     
-    if (Object.keys(rovers).length >= 3) {
+   if (Object.keys(rovers).length >= 3) {
       $(".error").html("can't make more than 3 rovers")
     } else if (control !== 0) {
        $(".error").html("must finish creating this rover first")        
     } else {
      
-    control = 1;
+    	$(".error").html("");	
+
+    	control = 1;
     
-    $(".roverInfo").html("");
-    var addName = "<input placeholder='name' type='text' class='roverName'><br>";
-    var addPosX = "<input placeholder='x-position' type='number' class='roverX'><br>";
-    var addPosY = "<input placeholder='y-position' type='number' class='roverY'><br>";
-    var addDir = "<input placeholder='direction' type='text' class='dir'><br>";
-    var addCom = "<input placeholder='commands' type='text' class='commands'><br>";
-    var create = "<input type='submit' value='create' class='create'><br>";
+    	$(".roverInfo").html("");
+    	var addName = "<input placeholder='name' type='text' class='roverName'><br>";
+    	var addPosX = "<input placeholder='x 0-"+planet_size - 1+"' type='number' class='roverX'><br>";
+    	var addPosY = "<input placeholder='y 0-"+planet_size - 1+"' type='number' class='roverY'><br>";
+    	var addDir = "<input placeholder='direction N S E W' type='text' class='dir'><br>";
+    	var addCom = "<input placeholder='commands f b r l' type='text' class='commands'><br>";
+    	var create = "<input type='submit' value='create' class='create'><br>";
     
-    $(".roverInfo").append(addName, addPosX, addPosY, addDir, addCom, create);
+    	$(".roverInfo").append(addName, addPosX, addPosY, addDir, addCom, create);
     
-    // make rover with given info
-  $(".create").on("click", function() {
+    	// make rover with given info
+  		$(".create").on("click", function() {
     
+    		var name = $(".roverName").val();
+    		var x = Number($(".roverX").val());
+    		var y = Number($(".roverY").val());
+    		var position = [x,y];
+    		var dir = $(".dir").val().toUpperCase(); // toUpperCase()
+    		var commands = $(".commands").val();
+    		var maxPos = planet_size - 1;
     
-    var name = $(".roverName").val();
-    var x = Number($(".roverX").val());
-    var y = Number($(".roverY").val());
-    var position = [x,y];
-    var dir = $(".dir").val();
-    var commands = $(".commands").val();
+    		// ensure user provides necessary info
+    		if (!name || x === "" || y === "" || !position || !dir || !commands) {
+    		    $(".error").html("must provide all info")
+    		} else {
+
+    			// ensure proper usage
+    			if ((x < 0)||(x > maxPos)) {
+    				$(".error").html("x can't be greater than "+maxPos);
+    			} else if ((y < 0)||(y > maxPos)) {
+    				$(".error").html("y can't be greater than "+maxPos);
+    			} else if (!'NSEWnsew'.includes(dir) && dir.length !== 1) {
+    				$(".error").html("'N'-North / 'S'-South / 'E'-East / 'W'-West");
+    			} else if (/[^fbrlFBRL]/.test(commands)) {
+    				$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left");
+    			} else {
     
-    if (!name || x === "" || y === "" || !position || !dir || !commands) {
-      $(".error").html("must provide all info")
-    } else {
+    				control = 0;
+    				rovers[name] = new Rover(position,dir,commands);
     
-    control = 0;
-    rovers[name] = new Rover(position,dir,commands);
-    
-    // add button to move rovers
-    var start = "<button class='btn btn-primary start'>Start!</button>"
-    $(".action").html(start);  
+    				// add button to move rovers
+    				var start = "<button class='btn btn-primary start'>Start!</button>"
+    				$(".action").html(start);  
       
-    // move rovers!
-  $(".start").on("click", function() {
-    
-    for (let name in rovers) {
-      rovers[name].move();
-    }
+    				// move rovers!
+  					$(".start").on("click", function() {
+    	
+    					for (let name in rovers) {
+    					    rovers[name].move();
+    					}
       
-  })
+  					})
       
-    }  
-  })
+    			}
+    		}  
+    	})
       
- }    
+ 	}    
 });
   
   
   
   
   $(".clear").on("click", function() {
+    $(".spaceSize").val("");
     $(".roverInfo").html("");
     control = 0;
     clear();
@@ -283,9 +337,12 @@ $(document).ready(function() {
     
     rovers = {};
     planet_size = 0;
+    $(".newR").html("");
+    $(".diff_input").html("");
+    $(".diff").html("");
     $(".error").html("");
     $(".final").html("");
-    $(".row").html("");
+    $(".planet").html("");
     $(".action").html("")  
   }  
 
