@@ -335,76 +335,76 @@ $(document).ready(function() {
 
   var maxPos = planet_size - 1;
 
-    		$(".roverInfo").html("");
-        // add input filds for roverInfo
-    		var addName = "<input placeholder='name' type='text' class='roverName'><br>";
-    		var addPosX = "<input placeholder='x 0-"+maxPos+"' type='number' class='roverX'><br>";
-    		var addPosY = "<input placeholder='y 0-"+maxPos+"' type='number' class='roverY'><br>";
-    		var addDir = "<input placeholder='direction N S E W' type='text' class='dir'><br>";
-    		var addCom = "<input placeholder='commands f b r l' type='text' class='commands'><br>";
-    		var create = "<input type='submit' value='create' class='create'><br>";
+  $(".roverInfo").html("");
+  // add input filds for roverInfo
+  var addName = "<input placeholder='name' type='text' class='roverName'><br>";
+  var addPosX = "<input placeholder='x 0-"+maxPos+"' type='number' class='roverX'><br>";
+  var addPosY = "<input placeholder='y 0-"+maxPos+"' type='number' class='roverY'><br>";
+  var addDir = "<input placeholder='direction N S E W' type='text' class='dir'><br>";
+  var addCom = "<input placeholder='commands f b r l' type='text' class='commands'><br>";
+  var create = "<input type='submit' value='create' class='create'><br>";
 
-    		$(".roverInfo").append(addName, addPosX, addPosY, addDir, addCom, create);
+  $(".roverInfo").append(addName, addPosX, addPosY, addDir, addCom, create);
 
-    		// make rover with given info
-  			$(".create").on("click", function() {
+  // make rover with given info
+  $(".create").on("click", function() {
 
-    			var name = $(".roverName").val();
-    			var x = Number($(".roverX").val());
-    			var y = Number($(".roverY").val());
-    			var position = [x,y];
-    			var dir = $(".dir").val().toUpperCase();
-    			var commands = $(".commands").val();
+  var name = $(".roverName").val();
+  var x = Number($(".roverX").val());
+  var y = Number($(".roverY").val());
+  var position = [x,y];
+  var dir = $(".dir").val().toUpperCase();
+  var commands = $(".commands").val();
 
-    			// ensure user provides necessary info
-    			if (!name || x === "" || y === "" || !position || !dir || !commands) {
-    			  $(".error").html("must provide all info");
-    			} else {
+  // ensure user provides necessary info
+  if (!name || x === "" || y === "" || !position || !dir || !commands) {
+  $(".error").html("must provide all info");
+  } else {
 
-    				// ensure proper usage
-    				if ((x < 0)||(x > maxPos)) {
+  // ensure proper usage
+  if ((x < 0)||(x > maxPos)) {
 
-    					$(".error").html("x has to be between 0 and "+maxPos);
+  $(".error").html("x has to be between 0 and "+maxPos);
 
-    				} else if ((y < 0)||(y > maxPos)) {
+  } else if ((y < 0)||(y > maxPos)) {
 
-    					$(".error").html("y has to be between 0 and "+maxPos);
+  $(".error").html("y has to be between 0 and "+maxPos);
 
-    				} else if (/[^NSEWnsew]/.test(dir)) {
+  } else if (/[^NSEWnsew]/.test(dir)) {
 
-    					$(".error").html("'N'-North / 'S'-South / 'E'-East / 'W'-West");
+  $(".error").html("'N'-North / 'S'-South / 'E'-East / 'W'-West");
 
-    				} else if (/[^fbrlFBRL]/.test(commands)) {
+  } else if (/[^fbrlFBRL]/.test(commands)) {
 
-    					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
+  $(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
 
-    				} else {
+  } else {
 
-              $(".error").html("");
-    					control = 0;
-    					rovers[name] = new Rover(name,position,dir,commands);
-              console.log(rovers[name]);
+  $(".error").html("");
+  control = 0;
+  rovers[name] = new Rover(name,position,dir,commands);
+  console.log(rovers[name]);
 
-    					// add button to move rovers
-    					var start = "<button class='btn btn-primary start'>Start!</button>";
-    					$(".action").html(start);
+  // add button to move rovers
+  var start = "<button class='btn btn-primary start'>Start!</button>";
+  $(".action").html(start);
 
-    					// move rovers!
-  						$(".start").on("click", function() {
+  // move rovers!
+  $(".start").on("click", function() {
 
-    						for (let name in rovers) {
-    						  rovers[name].move();
-    						}
+  for (let name in rovers) {
+  rovers[name].move();
+  }
 
-                // after each rover has moved, render final results for each rover
-                renderFinalMessages(finalMessages);
+  // after each rover has moved, render final results for each rover
+  renderFinalMessages(finalMessages);
 
-  						});
- 		   			}
-    			}
-     	  });
- 		  }
-	  });
+  });
+ 	}
+  }
+  });
+ 	}
+	});
 
 
 
@@ -412,27 +412,27 @@ $(document).ready(function() {
 	 clear past events and reset
  ************************************/
 
-	$(".clear").on("click", function() {
-    	$(".spaceSize").val("");
-    	$(".roverInfo").html("");
-    	control = 0;
-    	clear();
-  	});
+$(".clear").on("click", function() {
+$(".spaceSize").val("");
+$(".roverInfo").html("");
+control = 0;
+clear();
+});
 
-  	// clear rows
-  	function clear() {
+// clear rows
+[function clear() {
 
-    	planet_size = 0;
-    	finalMessages = [];
-    	rovers = {};
-    	planet_size = 0;
-    	$(".newR").html("");
-    	$(".diff_input").html("");
-    	$(".diff").html("");
-    	$(".error").html("");
-    	$(".final").html("");
-    	$(".planet").html("");
-    	$(".action").html("");
-  	}
+planet_size = 0;
+finalMessages = [];
+rovers = {};
+planet_size = 0;
+$(".newR").html("");
+$(".diff_input").html("");
+$(".diff").html("");
+$(".error").html("");
+$(".final").html("");
+$(".planet").html("");
+$(".action").html("");
+  }]
 
 });
