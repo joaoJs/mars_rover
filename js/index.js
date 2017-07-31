@@ -318,22 +318,22 @@ $(document).ready(function() {
 
   $(".newR").on("click", function() {
 
-      // ensure proper usage
-   		if (Object.keys(rovers).length >= 3) {
+  // ensure proper usage
+  if (Object.keys(rovers).length >= 3) {
 
-    	  $(".error").html("can't make more than 3 rovers");
+  $(".error").html("can't make more than 3 rovers");
 
-    	} else if (control !== 0) {
+  } else if (control !== 0) {
 
-    	  $(".error").html("must finish creating this rover first");
+  $(".error").html("must finish creating this rover first");
 
-    	} else {
+  } else {
 
-    		$(".error").html("");
+  $(".error").html("");
 
-    		control = 1;
+  control = 1;
 
-    		var maxPos = planet_size - 1;
+  var maxPos = planet_size - 1;
 
     		$(".roverInfo").html("");
         // add input filds for roverInfo
@@ -377,7 +377,7 @@ $(document).ready(function() {
     				} else if (/[^fbrlFBRL]/.test(commands)) {
 
     					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
-              
+
     				} else {
 
               $(".error").html("");
