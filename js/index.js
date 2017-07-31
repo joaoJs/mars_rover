@@ -85,69 +85,72 @@ $(document).ready(function() {
 
 }
   
-  // function to move rovers
+/****************************
+  function to move rovers
+****************************/
+
   Rover.prototype.move = function() {
     
     var final = "alive";
     var begin = String(this.position[1]+this.position[0]);
     var curr = $(".c"+this.position[1]+this.position[0]).text();
+
+    // check if current position is not an obstacle
     if (curr !== "*") {
  
-    var rover = this;
-    var commands = this.commands;
+      var rover = this;
+      var commands = this.commands;
   
-   var changeDirection = {
-    f : function() {rover.direction = 'N';},
-    b : function() {rover.direction = 'S';},
-    r : function() {rover.direction = 'E';},
-    l : function() {rover.direction = 'W';}
-};
+      // obj to helps rover switch direction
+      var changeDirection = {
+        f : function() {rover.direction = 'N';},
+        b : function() {rover.direction = 'S';},
+        r : function() {rover.direction = 'E';},
+        l : function() {rover.direction = 'W';}
+      };
   
-  //function move will take a list of commands as input
-  for (var i = 0; i < commands.length; i++) {
-    //each element in the list will be a new direction command for the rover
-    var dir = commands[i];
-    //therefore we call the changeDirection object and change rover's direction according to the command (f b r l)
-    changeDirection[dir]();
-    //we finally ask for the rover to move forward with the updated direction
-    //goForward(rover);
+      // for each command
+      for (var i = 0; i < commands.length; i++) {
+        
+        var dir = commands[i];
+        // change the direction 
+        changeDirection[dir]();
     
-    var next = goForward(rover)
-    //console.log(next, "next");
-    if (next === "found") {
-      final = "found";
-      $(".col-").css('background','red');
-      console.log('here');
-      break;
-    } else if (next === "crashed") {
-      final = "crashed";
-      $(".col-").css('background','red');
-      console.log("crashed");
-      break;
-    }
+        // keep result of next move 
+        var next = goForward(rover)
+    
 
-    //it will move once for each command on the list and will eventually display its new position
-    }
+        if (next === "found") {
+          final = "found";
+          $(".col-").css('background','red');
+          break;
+        } else if (next === "crashed") {
+          final = "crashed";
+          $(".col-").css('background','red');
+          break;
+        }
+
+
+      }   
     } else {
-     $(".c"+this.position[1]+this.position[0]).css("border","solid 1px black"); $(".c"+this.position[1]+this.position[0]).text("X");
+
+      // 
+      $(".c"+this.position[1]+this.position[0]).css("border","solid 1px black"); 
+      $(".c"+this.position[1]+this.position[0]).text("X");
       $(".col-").css('background','red');
       final = "landed in obstacle";
     }
   
-    console.log(final);
     //$(".c"+begin).html("Y")
     $(".final").html(final);
-  //return obst;
+    
 }
   
-  // build planet space;
+/***************************
+    build planet space
+***************************/
+
   $(".build").on("click", function() {
-    
-    //var not_empty = $(".planet").text();
-    
-    /*if (not_empty) {
-      clear();
-    }*/
     
     clear();
     
@@ -161,18 +164,18 @@ $(document).ready(function() {
       $(".error").html("must provide size from 5 to 15")
     } else {
     
-    $(".error").html("");
+      $(".error").html("");
       
-    var toDiff_input = "<input placeholder='difficulty 1 - "+max_diff+"' type='number' class='setObst'>"
-    var toDiff = "<input type='submit' value='set obstacles' class='set_obst'><br>"
+      var toDiff_input = "<input placeholder='difficulty 1 - "+max_diff+"' type='number' class='setObst'>"
+      var toDiff = "<input type='submit' value='set obstacles' class='set_obst'><br>"
     
-    $(".diff_input").append(toDiff_input)
-    $(".diff").append(toDiff); 
+      $(".diff_input").append(toDiff_input)
+      $(".diff").append(toDiff); 
       
-    var height = space_size[0];
-    var width = space_size[1];
+      var height = space_size[0];
+      var width = space_size[1];
     
-    setSpace(height, width);
+      setSpace(height, width);
     
     }
     
@@ -181,20 +184,21 @@ $(document).ready(function() {
   // function to build and append space to html 
   var setSpace = function(height, width) {
   
-    // maybe invert, start on height
-  for (var i = height - 1; i >= 0; i--) {
-    var new_row = "<div class='row r"+i+"'>"
-    
-    for (var j = 0; j < width; j++) {
+    // building the grid
+    // for each row add a new div to html
+    for (var i = height - 1; i >= 0; i--) {
+      var new_row = "<div class='row r"+i+"'>"
       
-      new_row += "<div class='col- c"+i+j+"'><p id='-"+i+","+j+"'></p></div>"
+      // for each column add a new div to html
+      for (var j = 0; j < width; j++) {
+        new_row += "<div class='col- c"+i+j+"'><p id='-"+i+","+j+"'></p></div>"
+      }
+
+      new_row += "</div>";
+      $(".planet").append(new_row);  
+
     }
-    new_row += "</div>";
-    $(".planet").append(new_row);  
-    //console.log(new_row);
-  }
-  
-};
+  };
   
 /************************
 	set obstacles
@@ -304,7 +308,7 @@ $(document).ready(function() {
     				} else if (/[^NSEWnsew]/.test(dir)) {
     					$(".error").html("'N'-North / 'S'-South / 'E'-East / 'W'-West");
     				} else if (/[^fbrlFBRL]/.test(commands)) {
-    					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left");
+    					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
     				} else {
     
     					control = 0;
