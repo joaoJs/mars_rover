@@ -266,11 +266,17 @@ $(document).ready(function() {
 
         // ensure proper usage
     		if (!difficulty) {
+
     		    $(".error").html("must provide difficulty");
+
     		} else if (difficulty > max_diff) {
+
     		    $(".error").html("difficulty too high for planet size");
+
     		} else if (difficulty < 1) {
+
             $(".error").html("difficulty can't be less than 1");
+
         } else {
 
     			$(".error").html("");
@@ -300,7 +306,7 @@ $(document).ready(function() {
       				  $(".c"+j+k).text("*");
               }
   					}
-  				};
+  				}
     		}
     	}
     });
@@ -314,9 +320,13 @@ $(document).ready(function() {
 
       // ensure proper usage
    		if (Object.keys(rovers).length >= 3) {
+
     	  $(".error").html("can't make more than 3 rovers");
+
     	} else if (control !== 0) {
+
     	  $(".error").html("must finish creating this rover first");
+
     	} else {
 
     		$(".error").html("");
@@ -353,13 +363,21 @@ $(document).ready(function() {
 
     				// ensure proper usage
     				if ((x < 0)||(x > maxPos)) {
+
     					$(".error").html("x has to be between 0 and "+maxPos);
+
     				} else if ((y < 0)||(y > maxPos)) {
+
     					$(".error").html("y has to be between 0 and "+maxPos);
+
     				} else if (/[^NSEWnsew]/.test(dir)) {
+
     					$(".error").html("'N'-North / 'S'-South / 'E'-East / 'W'-West");
+
     				} else if (/[^fbrlFBRL]/.test(commands)) {
+
     					$(".error").html("'f'-forward / 'b'-backwards / 'r'-right / 'l'-left \nex.: fffrrbbl");
+              
     				} else {
 
               $(".error").html("");
