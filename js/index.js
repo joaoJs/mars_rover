@@ -26,9 +26,8 @@ $(document).ready(function() {
    *********************************************************/
 
   function goForward(rover) {
-    
-    console.log(rover, "F");
 
+    // change rovers position according to its direction
     switch(rover.direction) {
       case 'N':
         rover.position[1]++;
