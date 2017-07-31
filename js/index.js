@@ -395,12 +395,12 @@ $(document).ready(function() {
               // after each rover has moved, render final results for each rover
               renderFinalMessages(finalMessages);
 
-});
-}
-}
-});
-}
-});
+            });
+          }
+        }
+      });
+    }
+  });
 
 
 
