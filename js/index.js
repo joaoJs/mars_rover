@@ -264,8 +264,9 @@ $(document).ready(function() {
         } else {
     
     			$(".error").html("")
-      
-    			var new_rover = '<input type="submit" value="new rover" class="makeRover"><p>You can make up to 3 rovers</p>'
+          
+          var new_rover = '<button class="btn btn-primary">new rover</button><p>You can make up to 3 rovers</p>'
+    			//var new_rover = '<input type="submit" value="new rover" class="makeRover"><p>You can make up to 3 rovers</p>'
     			$(".newR").html(new_rover);
       
     			set_obstacles(difficulty);
