@@ -151,7 +151,6 @@ $(document).ready(function() {
     }
 
     if (final === " survived") {
-      console.log(this);
       $(".c"+this.position[1]+this.position[0]).text("O");
       final += " and its current position is ["+ this.position[0] + "," + this.position[1] + "]";
     }
