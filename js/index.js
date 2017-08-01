@@ -53,6 +53,26 @@ $(document).ready(function() {
   var y =  rover.position[1];
   var text = $(".c"+y+x).text();
 
+    //rovers leave a mark (o) on previous position
+      switch(rover.direction) {
+        case 'N':
+          $(".c"+(y-1)+x).text("o");
+          $(".c"+y+x).text("o");
+          break;
+        case 'E':
+          $(".c"+y+(x-1)).text("o");
+          $(".c"+y+x).text("o");
+          break;
+        case 'S':
+          $(".c"+(y+1)+x).text("o");
+          $(".c"+y+x).text("o");
+          break;
+        case 'W':
+          $(".c"+y+(x+1)).text("o");
+          $(".c"+y+x).text("o");
+          break;
+        }
+
   // '.c-y+x' --> html class for grid's new position
   // if rover finds an obstacle
   if(text === '*') {
@@ -61,33 +81,15 @@ $(document).ready(function() {
     $(".c"+y+x).text("X");
     return "found";
     // if rover crashes with previous rover
-  } else if (text === "|" || text === "--") {
+  } else if (text === "O") {
+    $(".c"+y+x).css('border','1px solid black');
+    $(".c"+y+x).text("X");
     return "crashed";
     } else {
 
-    //rovers leave a mark (o) on previous position
-      switch(rover.direction) {
-    case 'N':
-      $(".c"+(y-1)+x).text("o");
-      $(".c"+y+x).text("|");
-      break;
-    case 'E':
-      $(".c"+y+(x-1)).text("o");
-      $(".c"+y+x).text("--");
-      break;
-    case 'S':
-      $(".c"+(y+1)+x).text("o");
-      $(".c"+y+x).text("|");
-      break;
-    case 'W':
-      $(".c"+y+(x+1)).text("o");
-      $(".c"+y+x).text("--");
-      break;
-  }
+      //console.log("New Rover Position: [" + x + ", " + y + "]");
 
-  //console.log("New Rover Position: [" + x + ", " + y + "]");
-
-  }
+    }
 
 }
 
@@ -150,7 +152,8 @@ $(document).ready(function() {
 
     if (final === " survived") {
       console.log(this);
-      final += "and its current position is ["+ this.position[0] + "," + this.position[1] + "]";
+      $(".c"+this.position[1]+this.position[0]).text("O");
+      final += " and its current position is ["+ this.position[0] + "," + this.position[1] + "]";
     }
 
     rover.final = rover.name + final;
